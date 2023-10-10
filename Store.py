@@ -1,9 +1,19 @@
 from pymongo import MongoClient
+import discord
+from discord.ext import commands
 
 # Connect to MongoDB
 client = MongoClient('mongodb://localhost:27017/')
 db = client['stock_database']
 collection = db['stocks']
+
+intents = discord.Intents.default()
+intents.message_content = True
+intents.messages = True
+intents.guilds = True
+
+bot = commands.Bot(command_prefix='!', intents=intents)
+
 
 # Function to prompt user for stock data
 def prompt_stock_data():
@@ -125,5 +135,18 @@ def run_interface():
         else:
             print("Invalid choice. Please try again.")
 
-# Run the CLI interface
-run_interface()
+@bot.command()
+async def store(ctx):
+    stock_data = prompt_stock_data()
+    if stock_data:
+        store_stock_data(stock_data)
+        await ctx.send("Stock data stored successfully")
+@bot.command()
+async def find(ctx):
+    find_stock_data()
+
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user.name} ({bot.user.id})')
+
+bot.run('MTE2MTIwNjM2NzQ4NzU0MTMwOA.GTZUhw.EPr12M4AIpIB2iMHrUG0IktNfJk0XTwCTiRJu0')
