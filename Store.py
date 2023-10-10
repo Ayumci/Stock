@@ -91,11 +91,10 @@ def find_stock_data():
         'sub_category': sub_category,
         'item': item
     }
-
+    
     result = collection.find(stock_data)
-    print(result)
-    count = len(result)
-    # count = -1
+    count = collection.count_documents(stock_data   )
+
 
     if count > 0:
         print("Stock data found:")
